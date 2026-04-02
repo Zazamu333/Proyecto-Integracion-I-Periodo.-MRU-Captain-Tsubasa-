@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Tsubasa Movimiento Rectilíneo</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <script src="https://cdn.jsdelivr.net/npm/p5@1.9.3/lib/p5.min.js"></script>
+
+  <style>
+    body {
+      margin: 0;
+      padding: 0;
+      overflow: hidden;
+      background: black;
+    }
+    canvas {
+      display: block;
+    }
+  </style>
+
+</head>
+
+<body>
+
+<script>
+let bg, titulo, balon, tsubasa1, tsubasa2;
+
+let v = 1;
+let t = 1;
+let d = 1;
+let pX = 800;
+
+let paused = true;
+let reseted = true;
+
+function preload() {
+  bg = loadImage("img/FONDO.png", ok, fail);
+  titulo = loadImage("img/TITULO.png", ok, fail);
+  balon = loadImage("img/BALON.png", ok, fail);
+  tsubasa1 = loadImage("img/TSUBASA1.png", ok, fail);
+  tsubasa2 = loadImage("img/TSUBASA2.png", ok, fail);
+}
+
+function ok() {
+  console.log("Imagen cargada correctamente");
+}
+
+function fail(err) {
+  console.error("Error cargando imagen:", err);
+}
+
+function setup(){
+  createCanvas(1024, 728);
+}
+
+function draw(){
+  background(0);
+
+  // si alguna imagen no cargó, no intentes dibujarla
+  if(bg) image(bg,0,0,1024,768);
+  if(titulo) image(titulo,  width/6,30,  width/2,height/3.5);
+
+  if (pX == 800 && reseted == true){
+    if(tsubasa1) image(tsubasa1,  width*3/4, (height/2)-80, 134*1.4,(height/3)*1.4);
+  } else {
+    if(tsubasa2) image(tsubasa2,  width*3/4, (height/2)-80, 178*1.4,(height/3)*1.4);
+  }
+
+  if(balon) image(balon, pX, height*3/4, 50, 50);
+
+  v = d / t;
+
+  if(t <= 0) t = 1;
+  if(v <= 0) v = 1;
+  if(d <= 0) d = 1;
+
+  fill(255);
+  rect(-20, 250, 350, 150, 20);
+
+  textSize(20);
+  fill(0);
+  text("Velocidad (metros/segundo): " + v, 15,290);
+  text("Distancia (metros): " + d, 15,310);
+  text("Tiempo (segundos): " + t, 15,330);
+
+  textSize(25);
+  text("Recorrido del balón: " + (800 - pX), 15,360);
+
+  fill(255);
+  rect(20,height-100, width-(20*2), 140, 20);
+
+  textSize(20);
+  fill(0);
+  text("INSTRUCCIONES:", 40,height-45);
+  text("Flecha arriba/abajo: aumentar/disminuir tiempo", 80, height-25);
+  text("Flecha derecha/izquierda: aumentar/disminuir distancia", 80, height-5);
+  text("Barra espaciadora: pausar/reanudar", (width/2)+120, height-25);
+  text("Tecla 'R': reiniciar posición del balón", (width/2)+120, height-5);
+
+  if(!paused){
+    pX -= v;
+  }
+
+  if (pX != 800){
+    reseted = false;
+  }
+
+  if(pX < 100){
+    pX = 100;
+  }
+}
+
+function keyPressed(){
+  if(keyCode === UP_ARROW) t += 1;
+  if(keyCode === DOWN_ARROW) t -= 1;
+  if(keyCode === RIGHT_ARROW) d += 1;
+  if(keyCode === LEFT_ARROW) d -= 1;
+
+  if(key === 'r' || key === 'R'){
+    pX = 800;
+    reseted = true;
+  }
+
+  if(key === ' '){
+    paused = !paused;
+  }
+}
+</script>
+
+</body>
+</html>
